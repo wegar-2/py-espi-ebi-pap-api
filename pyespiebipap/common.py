@@ -89,14 +89,17 @@ def _scrape_date_entries_page(d: date, page: int) -> pd.DataFrame:
 
 def scrape_date_entries(d: date):
     logger.info(f"Scraping ESPI & EBI entries published by PAP "
-                f"for date {d.strftime('%Y-%m-%d')}")
+                f"for date {d.strftime(DEFAULT_DATE_FORMAT)}")
     datas: list[pd.DataFrame] = []
 
     for page in _natural_numbers_generator():
+        logger.info(f"Before scraping page {page} with entries "
+                    f"for date {d.strftime(DEFAULT_DATE_FORMAT)}")
         try:
             entries: pd.DataFrame = _scrape_date_entries_page(d=d, page=page)
         except Exception:
-            logger.info(f"")
+            logger.info(f"Failed attempting to scrape page {page}"
+                        f"for date {d.strftime(DEFAULT_DATE_FORMAT)}")
             break
         else:
             datas.append(entries)

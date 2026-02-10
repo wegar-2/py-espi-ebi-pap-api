@@ -29,5 +29,8 @@ for now.
 
 ### Retrieve All Entries Published on a Given Date
 ```python
+from datetime import date
+from pyespiebipap import scrape_date_entries
 
+entries = scrape_date_entries(date(2026, 2, 6))
 ```
