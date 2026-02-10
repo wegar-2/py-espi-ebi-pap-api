@@ -21,6 +21,14 @@ def _make_single_date_url(d: date) -> str:
             f"enddate={d.strftime(DEFAULT_DATE_FORMAT)}+23%3A59")
 
 
+def _make_single_date_and_page_url(d: date, page: int) -> str:
+    ds: str = d.strftime(DEFAULT_DATE_FORMAT)
+    return (f"https://espiebi.pap.pl/wyszukiwarka?"
+            f"created={ds}&"
+            f"enddate={ds}%2023%3A59&"
+            f"page={page}")
+
+
 def _is_news(li: BSTag) -> bool:
     return True if li.get("class", default=None) == ["news"] else False
 
@@ -48,9 +56,15 @@ def _parse_list_item(li: BSTag, d: date) -> Entry:
         url=_full_url_from_node(node=li.find("a").get("href"))
     )
 
+def _natural_numbers_generator():
+    n = 0
+    while True:
+        yield n
+        n += 1
 
-def scrape_date_entries(d: date) -> pd.DataFrame:
-    url: str = _make_single_date_url(d=d)
+
+def _scrape_date_entries_page(d: date, page: int) -> pd.DataFrame:
+    url: str = _make_single_date_and_page_url(d=d, page=page)
 
     logger.info(f"Getting response from {url}")
     response = requests.get(url=url)
@@ -71,3 +85,24 @@ def scrape_date_entries(d: date) -> pd.DataFrame:
     data = pd.concat([e.to_row() for e in entries], axis=0)
     data = data.sort_values(by="dt", ascending=True)
     return data.reset_index(drop=True)
+
+
+def scrape_date_entries(d: date):
+    logger.info(f"Scraping ESPI & EBI entries published by PAP "
+                f"for date {d.strftime('%Y-%m-%d')}")
+    datas: list[pd.DataFrame] = []
+
+    for page in _natural_numbers_generator():
+        try:
+            entries: pd.DataFrame = _scrape_date_entries_page(d=d, page=page)
+        except Exception:
+            logger.info(f"")
+            break
+        else:
+            datas.append(entries)
+
+    data = pd.concat(
+        datas, axis=0
+    ).sort_values(by="dt", ascending=True).reset_index(drop=True)
+
+    return data
