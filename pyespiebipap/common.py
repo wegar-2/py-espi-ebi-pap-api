@@ -15,6 +15,7 @@ __all__ = ["scrape_date_entries"]
 
 BSTag: TypeAlias = bs4.element.Tag
 
+
 def _make_single_date_url(d: date) -> str:
     return (f"https://espiebi.pap.pl/wyszukiwarka?"
             f"created={d.strftime(DEFAULT_DATE_FORMAT)}&"
@@ -55,6 +56,7 @@ def _parse_list_item(li: BSTag, d: date) -> Entry:
         title=_parse_title(title=li.find("a").text),
         url=_full_url_from_node(node=li.find("a").get("href"))
     )
+
 
 def _natural_numbers_generator():
     n = 0
