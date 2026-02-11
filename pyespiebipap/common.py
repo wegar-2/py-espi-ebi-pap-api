@@ -11,7 +11,7 @@ from pyespiebipap.entry import Entry
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["scrape_date_entries"]
+__all__ = ["scrape_date_entries", "BSTag"]
 
 BSTag: TypeAlias = bs4.element.Tag
 
