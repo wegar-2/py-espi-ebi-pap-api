@@ -7,7 +7,7 @@ import requests
 
 from pyespiebipap.constants import DEFAULT_DATE_FORMAT
 from pyespiebipap.entry import Entry
-from pyespiebipap.types import BSTag, Response, BSSoup, NodeSource
+from pyespiebipap.type_defs import BSTag, Response, BSSoup, NodeSource
 
 logger = logging.getLogger(__name__)
 
@@ -130,9 +130,22 @@ def make_node_soup(node_id: int):
 
 
 def extract_node_source(node_soup: BSSoup) -> NodeSource:
-
-
-    return "ESPI"
+    label = node_soup.find(
+        "div",
+        class_="field__label",
+        string=lambda s: s and s.strip() == "Źródło raportu" # noqa
+    )
+    if label:
+        value = label.find_next_sibling("div", class_="field__item")
+        source_name: str = value.get_text(strip=True)
+        if source_name == "ESPI":
+            return "ESPI"
+        elif source_name == "EBI":
+            return "EBI"
+        else:
+            raise ValueError
+    else:
+        raise ValueError
 
 
 if __name__ == "__main__":
