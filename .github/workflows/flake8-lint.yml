@@ -23,4 +23,4 @@ jobs:
 
       - name: Run Flake8
         run: |
-          flake8 pyespiebipap
+          flake8 pyespiebipapapi

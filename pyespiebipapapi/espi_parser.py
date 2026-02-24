@@ -4,8 +4,8 @@ from typing import Any, TypedDict
 
 import pandas as pd
 
-from pyespiebipap.type_defs import BSTag, BSSoup
-from pyespiebipap.node import ESPINode
+from pyespiebipapapi.type_defs import BSTag, BSSoup
+from pyespiebipapapi.node import ESPINode
 
 __all__ = ["parse_espi_node_soup"]
 

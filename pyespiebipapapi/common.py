@@ -5,9 +5,9 @@ import bs4
 import pandas as pd
 import requests
 
-from pyespiebipap.constants import DEFAULT_DATE_FORMAT
-from pyespiebipap.entry import Entry
-from pyespiebipap.type_defs import BSTag, Response, BSSoup, NodeSource
+from pyespiebipapapi.constants import DEFAULT_DATE_FORMAT
+from pyespiebipapapi.entry import Entry
+from pyespiebipapapi.type_defs import BSTag, Response, BSSoup, NodeSource
 
 logger = logging.getLogger(__name__)
 
